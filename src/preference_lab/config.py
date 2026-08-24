@@ -1,8 +1,14 @@
 from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
-import yaml
+
+import yaml  # type: ignore[import-untyped]
+
 
 def load_config(path: str | Path) -> dict[str, Any]:
     with Path(path).open("r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        loaded: object = yaml.safe_load(f)
+    if not isinstance(loaded, dict) or not all(isinstance(key, str) for key in loaded):
+        raise ValueError("config root must be a mapping with string keys")
+    return loaded

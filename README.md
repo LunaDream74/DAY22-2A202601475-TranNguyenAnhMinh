@@ -24,6 +24,21 @@ Optional training dependencies:
 pip install -e '.[dev,train]'
 ```
 
+## Local DPO fine-tuning
+
+Prepare the leakage-free split, run a one-step GPU check, then train the LoRA adapter:
+
+```bash
+python scripts/prepare_training_data.py
+python scripts/train_dpo.py --smoke --output-dir outputs/smoke-dpo-lora
+python scripts/train_dpo.py --output-dir outputs/smollm2-135m-dpo-lora
+```
+
+The trainer uses the 51 training pairs and 13 held-out pairs by default. It saves the LoRA
+weights, tokenizer, run configuration, checkpoints, and JSON metrics beneath `outputs/`.
+Training defaults to FP32 for compatibility with older Pascal GPUs; `--fp16` is available for
+hardware where half-precision gradients are stable.
+
 ## Lab rules
 
 1. Do not rewrite the whole repository.
